@@ -10,12 +10,31 @@ import 'models/transaction.dart';
 main() => runApp(ExpensesApp());
 
 class ExpensesApp extends StatelessWidget {
-  const ExpensesApp({super.key});
-
   @override
   Widget build(BuildContext context) {
+    final ThemeData tema = ThemeData();
+
     return MaterialApp(
       home: MyHomePage(),
+      theme: tema.copyWith(
+          colorScheme: tema.colorScheme.copyWith(
+            primary: Colors.purple,
+            secondary: Colors.amber,
+          ),
+          textTheme: tema.textTheme.copyWith(
+            headline6: TextStyle(
+              fontFamily: 'OpenSans',
+              fontSize: 18,
+              color: Colors.black,
+            ),
+          ),
+          appBarTheme: AppBarTheme(
+            titleTextStyle: TextStyle(
+              fontFamily: 'Quicksand',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          )),
     );
   }
 }
@@ -26,8 +45,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-   final _transactions = [
+  final _transactions = [
     Transaction(
       id: 't1',
       title: 'Novo Tênis de Corrida',
@@ -40,18 +58,17 @@ class _MyHomePageState extends State<MyHomePage> {
       value: 211.30,
       date: DateTime.now(),
     ),
-
-
   ];
+
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
         context: context,
         builder: (_) {
           return TransactionForm(_addTransaction);
-    });
+        });
   }
 
-   _addTransaction(String title, double value) {
+  _addTransaction(String title, double value) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       title: title,
@@ -62,6 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _transactions.add(newTransaction);
     });
+
+    Navigator.of(context).pop();
   }
 
   @override
