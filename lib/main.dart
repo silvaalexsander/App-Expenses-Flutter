@@ -20,7 +20,7 @@ class ExpensesApp extends StatelessWidget {
       theme: tema.copyWith(
           colorScheme: tema.colorScheme.copyWith(
             primary: Colors.purple,
-            secondary: Colors.amber,
+            secondary: Colors.purple[300],
           ),
           textTheme: tema.textTheme.copyWith(
             headline6: TextStyle(
@@ -47,20 +47,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [
-    Transaction(
-      id: 't1',
-      title: 'Novo Tênis de Corrida',
-      value: 310.76,
-      date: DateTime.now().subtract(Duration(days: 3)),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de Luz',
-      value: 211.30,
-      date: DateTime.now().subtract(Duration(days: 5)),
-    ),
-  ];
+  final List<Transaction> _transactions = [];
 
   List<Transaction> get _recenteTransactions {
     return _transactions.where((tr) {
@@ -78,19 +65,24 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime date) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       title: title,
       value: value,
-      date: DateTime.now(),
+      date: date,
     );
-
     setState(() {
       _transactions.add(newTransaction);
     });
 
     Navigator.of(context).pop();
+  }
+
+  _removeTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) => tr.id == id);
+    });
   }
 
   @override
@@ -110,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recenteTransactions),
-            TransactionList(_transactions),
+            TransactionList(_transactions, _removeTransaction),
           ],
         ),
       ),
